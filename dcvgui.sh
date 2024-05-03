@@ -29,9 +29,9 @@ show_error () {
 run_gui () {
     local GUI_OPTIONS=(--height 300 --title "Choose DCV Connection"
                        --no-click --ellipsize end
-                       --button Cancel:1
-                       --button OK:0
-                       --button "Create Connection":2
+                       --button Cancel\!gtk-cancel:1
+                       --button "Create Connection"\!gtk-edit:2
+                       --button OK\!gtk-ok:0
                       )
     # List all filenames in config dir, without extension
     local NAMES
