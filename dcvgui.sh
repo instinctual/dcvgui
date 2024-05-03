@@ -14,6 +14,7 @@ check_prereqs () {
         echo >&2 "Error: dcvviewer ($DCVVIEWER) is not installed; please install it."
         exit 1
     }
+    mkdir -p "$CONFIGDIR"
 }
 
 run_gui () {
