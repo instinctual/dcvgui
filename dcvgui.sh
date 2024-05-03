@@ -53,7 +53,7 @@ run_create () {
                           --field "Connection Name" ""
                           --field "Host Name/IP" ""
                           --field Port:NUM "$DEFAULT_PORT"
-                          --field User "$USER"
+                          --field User
                          )
     # Show the Create GUI form
     result=$(yad --form "${CREATE_OPTIONS[@]}")
