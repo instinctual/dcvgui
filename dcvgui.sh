@@ -29,35 +29,76 @@ show_error () {
 run_gui () {
     local GUI_OPTIONS=(--height 300 --title "Choose DCV Connection"
                        --no-click --ellipsize end
-                       --button Cancel\!gtk-cancel:1
-                       --button "Create Connection"\!gtk-edit:2
-                       --button OK\!gtk-ok:0
+                       --button "Cancel"\!gtk-cancel:1
+                       --button "Manage"\!gtk-edit:2
+                       --button "Launch"\!gtk-ok:0
                       )
-    # List all filenames in config dir, without extension
-    local NAMES
-    NAMES=$( (cd "$CONFIGDIR" && /bin/ls -1 -- *.dcv 2>/dev/null) | sed 's/\.dcv$//')
+    local done=0
+    while [[ $done == 0 ]]; do
+        # List all filenames in config dir, without extension
+        local NAMES
+        NAMES=$( (cd "$CONFIGDIR" && /bin/ls -1 -- *.dcv 2>/dev/null) | sed 's/\.dcv$//')
 
-    local result
-    result=$(echo "$NAMES" | yad --list "${GUI_OPTIONS[@]}" --column=Machine --separator "")
-    local status=$?
-    case $status in
-        0 ) # OK
-            if [[ -z $result ]]; then
-                show_error "Must choose a connection"
-                run_gui
-            else
-                echo Running "$DCVVIEWER" "${DCVVIEWER_OPTIONS[@]}" "${CONFIGDIR}/${result}.dcv"
-                "$DCVVIEWER" "${DCVVIEWER_OPTIONS[@]}" "${CONFIGDIR}/${result}.dcv"
-                exit 0
-            fi
-            ;;
-        1 ) # Cancel
-            exit 1
-            ;;
-        2 ) # Create Connection
-            run_create
-            ;;
-    esac
+        local result
+        result=$(echo "$NAMES" | yad --list "${GUI_OPTIONS[@]}" --column=Machine --separator "")
+        local status=$?
+        case $status in
+            0 ) # OK
+                if [[ -z $result ]]; then
+                    show_error "Must choose a connection"
+                    run_gui
+                else
+                    echo Running "$DCVVIEWER" "${DCVVIEWER_OPTIONS[@]}" "${CONFIGDIR}/${result}.dcv"
+                    "$DCVVIEWER" "${DCVVIEWER_OPTIONS[@]}" "${CONFIGDIR}/${result}.dcv"
+                    exit 0
+                fi
+                ;;
+            1 ) # Cancel
+                exit 1
+                ;;
+            2 ) # Manage (create/delete connections)
+                run_manage
+                # after this, loop around and show gui
+                ;;
+        esac
+    done
+}
+
+run_manage () {
+    # Manage shows all existing connections, but you can add/delete
+    local done=0
+    while [[ $done == 0 ]]; do
+        local NAMES
+        NAMES=$( (cd "$CONFIGDIR" && /bin/ls -1 -- *.dcv 2>/dev/null) | sed 's/\.dcv$//')
+
+        local result
+        local MANAGE_OPTIONS=(--height 300 --title "Delete DCV Connection"
+                              --text "Select a connection to delete, \nor press <b>Add</b> to create a new one"
+                              --text-align=center
+                              --column="Connection to delete"
+                              --separator=""
+                              --no-click --ellipsize end
+                              --button "Cancel"\!gtk-cancel:1
+                              --button "Add..."\!gtk-edit:0
+                              --button "Delete"\!gtk-delete:2
+                             )
+        result=$(echo "$NAMES" | yad --list "${MANAGE_OPTIONS[@]}")
+        local status=$?
+        case $status in
+            0 ) # Add
+                run_create
+                done=1
+                ;;
+            1 ) # Cancel
+                done=1
+                ;;
+            2 ) # Delete
+                local fname="${CONFIGDIR}/${result}.dcv"
+                [[ -e $fname ]] && rm "$fname"
+                # show dialog again
+                ;;
+        esac
+    done
 }
 
 run_create () {
