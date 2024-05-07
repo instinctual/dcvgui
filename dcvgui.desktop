@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+
+Name=DCVgui
+Comment=Instinctual DCVgui
+Exec=/opt/instinctual/bin/dcv.gui
+Icon=/opt/instinctual/desktop_connect.png
+Terminal=false
+Categories=Network;RemoteAccess;
+MimeType=x-scheme-handler/pcoip;
