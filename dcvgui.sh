@@ -27,7 +27,7 @@ show_error () {
 }
 
 run_gui () {
-    local GUI_OPTIONS=(--height 300 --title "Choose DCV Connection"
+    local GUI_OPTIONS=(--height 300 --borders=10 --title "Choose DCV Connection"
                        --no-click --ellipsize end
                        --button "Cancel"\!gtk-cancel:1
                        --button "Manage"\!gtk-edit:2
@@ -72,7 +72,7 @@ run_manage () {
         NAMES=$( (cd "$CONFIGDIR" && /bin/ls -1 -- *.dcv 2>/dev/null) | sed 's/\.dcv$//')
 
         local result
-        local MANAGE_OPTIONS=(--height 300 --title "Delete DCV Connection"
+        local MANAGE_OPTIONS=(--height 300 --borders=10 --title "Delete DCV Connection"
                               --text "Select a connection to delete, \nor press <b>Add</b> to create a new one"
                               --text-align=center
                               --column="Connection to delete"
@@ -102,7 +102,7 @@ run_manage () {
 }
 
 run_create () {
-    local CREATE_OPTIONS=(--height 500 --title "Create DCV Connection"
+    local CREATE_OPTIONS=(--height 500 --width=500 --borders=10 --title "Create DCV Connection"
                           --text "Connection Details:"
                           --field "Connection Name" ""
                           --field "Host Name/IP" ""
