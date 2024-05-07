@@ -19,7 +19,7 @@ check_prereqs () {
 
 show_error () {
     local ERR_OPTIONS=(--text-info
-                       --height 100 --width 300 --title "Error"
+                       --height 100 --width 300 --window-icon=gtk-dialog-error --centered --title "Error"
                        --fore=RED --margins=10 --wrap
                        --button OK:0
                       )
@@ -27,10 +27,10 @@ show_error () {
 }
 
 run_gui () {
-    local GUI_OPTIONS=(--height 300 --borders=10 --title "Choose DCV Connection"
+    local GUI_OPTIONS=(--height 300 --window-icon=applications-libraries --centered --borders=10 --title "Choose DCV Connection"
                        --no-click --ellipsize end
                        --button "Cancel"\!gtk-cancel:1
-                       --button "Manage"\!gtk-edit:2
+                       --button "Manage"\!control-center2:2
                        --button "Launch"\!gtk-ok:0
                       )
     local done=0
@@ -72,14 +72,14 @@ run_manage () {
         NAMES=$( (cd "$CONFIGDIR" && /bin/ls -1 -- *.dcv 2>/dev/null) | sed 's/\.dcv$//')
 
         local result
-        local MANAGE_OPTIONS=(--height 300 --borders=10 --title "Delete DCV Connection"
+        local MANAGE_OPTIONS=(--height 300 --window-icon=control-center2 --centered --borders=10 --title "Manage DCV Connections"
                               --text "Select a connection to delete, \nor press <b>Add</b> to create a new one"
                               --text-align=center
                               --column="Connection to delete"
                               --separator=""
                               --no-click --ellipsize end
                               --button "Cancel"\!gtk-cancel:1
-                              --button "Add..."\!gtk-edit:0
+                              --button "Add..."\!gtk-add:0
                               --button "Delete"\!gtk-delete:2
                              )
         result=$(echo "$NAMES" | yad --list "${MANAGE_OPTIONS[@]}")
@@ -102,12 +102,12 @@ run_manage () {
 }
 
 run_create () {
-    local CREATE_OPTIONS=(--height 500 --width=500 --borders=10 --title "Create DCV Connection"
+    local CREATE_OPTIONS=(--height 500 --width=500 --window-icon=gtk-add --centered --borders=10 --title "Create DCV Connection"
                           --text "Connection Details:"
                           --field "Connection Name" ""
                           --field "Host Name/IP" ""
-                          --field Port:NUM "$DEFAULT_PORT"
                           --field User ""
+                          --field Port:NUM "$DEFAULT_PORT"
                          )
     # Show the Create GUI form
     result=$(yad --form "${CREATE_OPTIONS[@]}")
