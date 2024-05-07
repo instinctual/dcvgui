@@ -4,8 +4,8 @@ Version=1.0
 
 Name=DCVgui
 Comment=Instinctual DCVgui
-Exec=/opt/instinctual/bin/dcv.gui
-Icon=/opt/instinctual/desktop_connect.png
+Exec=/opt/instinctual/bin/dcvgui.sh
+Icon=/opt/instinctual/dcvgui.png
 Terminal=false
 Categories=Network;RemoteAccess;
 MimeType=x-scheme-handler/pcoip;
