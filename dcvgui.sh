@@ -117,7 +117,7 @@ run_create () {
         run_gui
     fi
 
-    IFS="|" read -r connection_name ip port user <<< "$result"
+    IFS="|" read -r connection_name ip user port <<< "$result"
     connection_name="${connection_name//\//_}" # remove slashes
     if [[ -z $connection_name || -z $ip || -z $port ]]; then
         show_error "Connection name, IP addr and port must all be specified."
