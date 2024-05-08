@@ -29,7 +29,7 @@ show_error () {
 run_gui () {
     local GUI_OPTIONS=(--height 300 --window-icon=applications-libraries --centered --borders=10 --title "Choose DCV Connection"
                        --no-click --ellipsize end
-                       --button "Cancel"\!gtk-cancel:1
+                       --button "Quit"\!application-exit:1
                        --button "Manage"\!control-center2:2
                        --button "Launch"\!gtk-ok:0
                       )
@@ -79,7 +79,7 @@ run_manage () {
                               --separator=""
                               --no-click --ellipsize end
                               --button "Cancel"\!gtk-cancel:1
-                              --button "Add..."\!gtk-add:0
+                              --button "Add..."\!list-add:0
                               --button "Delete"\!gtk-delete:2
                              )
         result=$(echo "$NAMES" | yad --list "${MANAGE_OPTIONS[@]}")
@@ -102,7 +102,7 @@ run_manage () {
 }
 
 run_create () {
-    local CREATE_OPTIONS=(--height 500 --width=500 --window-icon=gtk-add --centered --borders=10 --title "Create DCV Connection"
+    local CREATE_OPTIONS=(--height=275 --width=500 --margins=10 --borders=15 --window-icon=list-add --centered  --title "Create DCV Connection"
                           --text "Connection Details:"
                           --field "Connection Name" ""
                           --field "Host Name/IP" ""
