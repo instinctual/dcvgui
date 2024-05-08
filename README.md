@@ -1,7 +1,7 @@
 
 ## Simple GUI to create, save and use Connection shortcuts to DCV Viewer.
 
-Tested only on Ubuntu 22.04.   
+Tested only on Ubuntu 22.04, likely work on RHEL based distributions too.   
 Assumes you already have DCV Viewer and YAD installed.
 
 If you are running Wayland, the GUI will always launch in the Top Left of the screen.
