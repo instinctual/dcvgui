@@ -12,6 +12,5 @@ mkdir -p /opt/instinctual/bin/
 #install shortcut
 /usr/bin/install -m 744 dcvgui.desktop /usr/share/applications/
 /usr/bin/install -m 644 dcvgui.png /opt/instinctual
-ln -sf /usr/share/applications/dcvgui.desktop /etc/xdg/autostart/
 
 echo "DCVgui installed."
