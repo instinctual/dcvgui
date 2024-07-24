@@ -49,8 +49,8 @@ run_gui () {
                     run_gui
                 else
                     echo Running "$DCVVIEWER" "${DCVVIEWER_OPTIONS[@]}" "${CONFIGDIR}/${result}.dcv"
-                    "$DCVVIEWER" "${DCVVIEWER_OPTIONS[@]}" "${CONFIGDIR}/${result}.dcv"
-                    exit 0
+                    ("$DCVVIEWER" "${DCVVIEWER_OPTIONS[@]}" "${CONFIGDIR}/${result}.dcv") &
+                    #exit 0
                 fi
                 ;;
             1 ) # Cancel
