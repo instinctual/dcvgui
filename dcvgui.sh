@@ -2,7 +2,7 @@
 
 : "${CONFIGDIR:=$HOME/.config/dcvgui}"
 : "${DCVVIEWER:=dcvviewer}"
-DCVVIEWER_OPTIONS=(--fullscreen --certificate-validation-policy=accept-untrusted)
+DCVVIEWER_OPTIONS=(--fullscreen --use-all-monitors --certificate-validation-policy=accept-untrusted)
 DEFAULT_PORT=8443
 
 check_prereqs () {
