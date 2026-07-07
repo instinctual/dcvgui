@@ -73,13 +73,14 @@ run_manage () {
 
         local result
         local MANAGE_OPTIONS=(--height 300 --window-icon=control-center2 --center --borders=10 --title "Manage DCV Connections"
-                              --text "Select a connection to delete, \nor press <b>Add</b> to create a new one"
+                              --text "Select a connection to edit or delete, \nor press <b>Add</b> to create a new one"
                               --text-align=center
-                              --column="Connection to delete"
+                              --column="Connection"
                               --separator=""
                               --no-click --ellipsize end
                               --button "Cancel"\!gtk-cancel:1
                               --button "Add..."\!list-add:0
+                              --button "Edit"\!gtk-edit:3
                               --button "Delete"\!gtk-delete:2
                              )
         result=$(echo "$NAMES" | yad --list "${MANAGE_OPTIONS[@]}")
@@ -97,8 +98,65 @@ run_manage () {
                 [[ -e $fname ]] && rm "$fname"
                 # show dialog again
                 ;;
+            3 ) # Edit
+                if [[ -z $result ]]; then
+                    show_error "Must choose a connection to edit"
+                else
+                    run_edit "$result"
+                fi
+                # show dialog again
+                ;;
         esac
     done
+}
+
+run_edit () {
+    local name="$1"
+    local fname="${CONFIGDIR}/${name}.dcv"
+    local host user port
+    host=$(sed -n 's/^host=//p' "$fname")
+    user=$(sed -n 's/^user=//p' "$fname")
+    port=$(sed -n 's/^port=//p' "$fname")
+
+    local EDIT_OPTIONS=(--height=275 --width=500 --margins=10 --borders=15 --window-icon=gtk-edit --center --title "Edit DCV Connection"
+                        --text "Connection Details:"
+                        --field "Connection Name" "$name"
+                        --field "Host Name/IP" "$host"
+                        --field User "$user"
+                        --field Port:NUM "${port:-$DEFAULT_PORT}"
+                       )
+    local result
+    result=$(yad --form "${EDIT_OPTIONS[@]}")
+    local status=$?
+    if [[ $status != 0 ]]; then
+        # Cancel -- back to manage dialog
+        return
+    fi
+
+    local connection_name ip
+    IFS="|" read -r connection_name ip user port <<< "$result"
+    connection_name="${connection_name//\//_}" # remove slashes
+    if [[ -z $connection_name || -z $ip || -z $port ]]; then
+        show_error "Connection name, IP addr and port must all be specified."
+        return
+    fi
+    local newfname="${CONFIGDIR}/${connection_name}.dcv"
+    if [[ $newfname != "$fname" && -e $newfname ]]; then
+        show_error "Connection $connection_name already exists; please use a different name"
+        return
+    fi
+    # Write the (possibly renamed) file
+    {
+        echo "[connect]"
+        echo "host=$ip"
+        echo "port=$port"
+        echo "user=$user"
+        echo
+        echo "[version]"
+        echo "format=1.0"
+    } > "$newfname"
+    # If renamed, remove the old file
+    [[ $newfname != "$fname" ]] && rm -f "$fname"
 }
 
 run_create () {
